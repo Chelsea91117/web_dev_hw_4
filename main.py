@@ -72,3 +72,15 @@ sync_session.commit()
 # for category_id, product_count in total_products:
 #     print(f"Category ID: {category_id}, Total Products: {product_count}")
 
+# Задача 5: Группировка с фильтрацией
+# Отфильтруйте и выведите только те категории, в которых более одного продукта.
+
+categories_gt1 = sync_session.query(
+    Product.category_id,
+    func.count(Product.id).label('product_count')
+).group_by(Product.category_id).having(func.count(Product.id) > 1).all()
+
+for category_id, product_count in categories_gt1:
+    print(f"Category ID: {category_id}, Total Products (more than 1): {product_count}")
+
+sync_session.close()
